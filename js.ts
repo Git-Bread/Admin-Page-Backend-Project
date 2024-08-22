@@ -5,10 +5,18 @@ let authed = false;
 
 //making sure its all loaded before running
 window.onload = async function() {
-    await checkLogin();   
-    let logBtn = document.getElementById("logBtn");
-    if (logBtn != null) {
-        logBtn?.addEventListener("click", () => log());   
+    await checkLogin();
+    if (document.getElementById("login")) {
+        let logBtn = document.getElementById("logBtn");
+        if (logBtn != null) {
+            logBtn?.addEventListener("click", () => log());   
+        }   
+    }
+    if (authed && !document.getElementById("index")) {
+        location.href = "index.html"
+    }
+    else if(!authed && !document.getElementById("login")) {
+        location.href = "login.html"
     }
 }
 
@@ -33,6 +41,7 @@ async function log() {
     }
     else {
         localStorage.setItem("token", res.token);
+         location.href = "index.html"
     }
 }
 
@@ -71,16 +80,13 @@ async function checkLogin() {
         console.log(res);
         //if logged in
         if (res) {
-            console.log("true");
             authed = true;
             return;
         }
         //otherwise remove "old" token
         else {
+            console.log("ran");
             localStorage.removeItem("token");
         }
-    }
-    if (!document.getElementById("login")) {
-        window.location.replace("login.html");   
     }
 }

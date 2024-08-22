@@ -2,7 +2,7 @@
   "name": "admin-page",
   "version": "1.0.0",
   "description": "Administrator page for project",
-  "source": "login.html",
+  "source": "index.html",
   "scripts": {
     "build": "parcel build",
     "run": "parcel"

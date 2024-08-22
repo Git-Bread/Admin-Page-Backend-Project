@@ -1,0 +1,12 @@
+{
+  "name": "admin-page",
+  "version": "1.0.0",
+  "description": "Administrator page for project",
+  "main": "index.html",
+  "scripts": {
+    "build": "parcel build",
+    "run": "parcel"
+  },
+  "author": "Max Gagner",
+  "license": "ISC"
+}

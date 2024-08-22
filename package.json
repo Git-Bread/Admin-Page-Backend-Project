@@ -2,11 +2,14 @@
   "name": "admin-page",
   "version": "1.0.0",
   "description": "Administrator page for project",
-  "main": "index.html",
+  "source": "login.html",
   "scripts": {
     "build": "parcel build",
     "run": "parcel"
   },
   "author": "Max Gagner",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "parcel": "^2.12.0"
+  }
 }

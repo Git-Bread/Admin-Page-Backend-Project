@@ -1,6 +1,7 @@
 //local url
 let url = "http://127.0.0.1:3000";
 let authed = false;
+let lastId= "";
 
 
 //making sure its all loaded before running
@@ -110,7 +111,6 @@ async function populate() {
         let price = document.createElement("p");
         let description = document.createElement("p");
         let allergies = document.createElement("p")
-        let image = document.createElement("img");
         let btn = document.createElement("button");
         let btn2 = document.createElement("button");
         let btn3 = document.createElement("button");
@@ -123,26 +123,21 @@ async function populate() {
         btn.addEventListener("click", function(){display(this)});
         btn2.addEventListener("click", function(){editItem(this)});
         btn3.addEventListener("click", function(){deleteItem(this)});
-        if (res[index].image != "no image")  {
-            image.innerHTML = res[index].image;
-        }
-        else {
-            let image = document.createElement("p");
-            image.innerHTML = res[index].image;
-        }
+
         name.innerHTML = res[index].name;
         description.innerHTML = res[index].description;
-        price.innerHTML = res[index].price;
+        price.innerHTML = "Price: " + res[index].price + " (EUR)";
+
         if (res[index].allergies != "no allergies") {
-            for (let index = 0; index < res[index].allergies.length; index++) {
-                allergies.innerHTML += res[index].allergies;
+            allergies.innerHTML = "Allergies: ";
+            for (let yndex = 0; yndex < res[index].allergies.length; yndex++) {
+                allergies.innerHTML += res[index].allergies[yndex];
             }
         }
         else {
-            allergies.innerHTML = res[0].allergies;
+            allergies.innerHTML = "Allergies: " + res[0].allergies;
         }
 
-        subcontainer1.append(image);
         subcontainer2.append(name);
         subcontainer2.append(description);
         subcontainer2.append(allergies);
@@ -151,7 +146,6 @@ async function populate() {
         subcontainer2.append(btn2);
         subcontainer2.append(btn3);
         subcontainer2.append(id);
-        container.append(subcontainer1);
         container.append(subcontainer2);
         itemList?.append(container);
     }
@@ -168,25 +162,72 @@ function display(obj: HTMLElement): any {
     return;
 }
 
-function newItem(obj: HTMLFormElement) {
-    console.log(obj);
+async function newItem(form: HTMLFormElement) {
+    let allergies: String;
+    allergies = "no allergies";
+    if (form?.getElementsByTagName("input")[2].value != "") {
+        allergies = form?.getElementsByTagName("input")[2].value;
+    }
+    let newItem = ({
+        name: form?.getElementsByTagName("input")[0].value,
+        description: form?.getElementsByTagName("textarea")[0].value,
+        price: form?.getElementsByTagName("input")[1].value,
+        allergies: allergies
+    });  
+
+    let res = await fetch(url + "/managment/addMenuItem", {
+        method: 'POST',
+        body: JSON.stringify(newItem),
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => response.json())
+    
+    if (res.error) {
+        errLog(res);
+        return;
+    }
+    location.reload();
 }
+
+
 function editItem(obj: HTMLButtonElement) {
+
     let element = obj.parentElement;
     let edit = document.getElementById("edit");
     let preview = document.getElementById("previewItems");
     console.log(preview?.children[0]);
-    
-    console.log(edit![0]);
-    console.log(element);
-    edit![1].value = element![0];
-    edit![2].value = element![3];
-    edit![3].value = element![1];
-    edit![4].value = element![3];
-    preview!.children[0].innerHTML = element![0];
-    preview!.children[1].innerHTML = element![3];
-    preview!.children[2].innerHTML = element![1];
-    preview!.children[3].innerHTML = element![3];
+
+    edit![0].value = element!.children[0].innerHTML;
+    edit![1].value = element!.children[3].innerHTML.replace(/[^0-9]/g, '');
+    edit![2].value = element!.children[2].innerHTML.slice(11);
+    edit![3].value = element!.children[1].innerHTML;
+    preview!.children[0].innerHTML = element!.children[0].innerHTML;
+    preview!.children[1].innerHTML = element!.children[2].innerHTML;
+    preview!.children[2].innerHTML = element!.children[3].innerHTML;
+    preview!.children[3].innerHTML = element!.children[1].innerHTML;
+
+    lastId = element!.getElementsByTagName("span")[0].innerHTML;
+
+    let create = document.getElementById('create')
+    let check: HTMLInputElement;
+    check = document.getElementById("modeCheck") as HTMLInputElement;
+    check.checked = true;
+    create!.style.display = 'none'
+    edit!.style.display = 'block'
+
+    edit![0].addEventListener("change", () => {
+        preview!.children[0].innerHTML = edit![0].value;
+    });
+    edit![1].addEventListener("change", () => {
+        preview!.children[2].innerHTML = "Price: " + edit![1].value + " (EUR)";
+    });
+    edit![2].addEventListener("change", () => {
+        preview!.children[1].innerHTML = edit![2].value;
+    });
+    edit![3].addEventListener("change", () => {
+        preview!.children[3].innerHTML = edit![3].value;
+    });
 }
 
 async function deleteItem(obj: HTMLButtonElement) {
@@ -199,9 +240,41 @@ async function deleteItem(obj: HTMLButtonElement) {
             'Content-Type': 'application/json',
         }
     }).then(response => response.json())
+
+    if (res.error) {
+        errLog(res);
+        return;
+    }
+
     console.log(res);
     location.reload();
 }
 
-async function removeCall() {
+async function updateItem(form: HTMLFormElement) {
+    let allergies: String;
+    allergies = "no allergies";
+    if (form?.getElementsByTagName("input")[2].value != "") {
+        allergies = form?.getElementsByTagName("input")[2].value;
+    }
+    let newItem = ({
+        name: form?.getElementsByTagName("input")[0].value,
+        description: form?.getElementsByTagName("textarea")[0].value,
+        price: form?.getElementsByTagName("input")[1].value,
+        allergies: allergies,
+        id: lastId
+    });  
+
+    let res = await fetch(url + "/managment/editMenuItem", {
+        method: 'PUT',
+        body: JSON.stringify(newItem),
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => response.json())
+
+    if (res.error) {
+        errLog(res);
+        return;
+    }
+    location.reload();
 }

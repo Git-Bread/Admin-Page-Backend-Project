@@ -31,18 +31,14 @@
                     }
                  }">
                 <p id="error"></p>
-                <form class="mainForms" id="create" name="create item">
-                    <div>
-                        <label for="imageInput1">Image (PNG/JPG format):</label>
-                        <input id="imageInput1" type="file" accept="image/png, image/jpeg">
-                    </div>
+                <form class="mainForms" id="create" name="create item" onsubmit=" newItem(this); return false;">
                     <div>
                         <label for="nameInput1">Name:</label>
-                        <input id="nameInput1" type="text" placeholder="Food name...">
+                        <input id="nameInput1" type="text" placeholder="Food name..." required>
                     </div>
                     <div>
                         <label for="priceInput1">Price (EUR):</label>
-                        <input type="number" id="priceInput1" placeholder="100">
+                        <input type="number" id="priceInput1" placeholder="100" required>
                     </div>
                     <div>
                         <label for="allergiesInput1">Allergies (Optional):</label>
@@ -50,15 +46,11 @@
                     </div>
                     <div>
                         <label for="descriptionInput1">Description:</label>
-                        <textarea class="bigText" id="descriptionInput1" placeholder="Description..."></textarea>
+                        <textarea class="bigText" id="descriptionInput1" placeholder="Description..." required></textarea>
                     </div>
                     <button type="submit" id="createBtn">Create New Item</button>
                 </form>
-                <form class="mainForms" id="edit" style="display: none;" name="edit item">
-                    <div>
-                        <label for="imageInput2">Image (PNG/JPG format):</label>
-                        <input id="imageInput2" type="file" accept="image/png, image/jpeg">
-                    </div>
+                <form class="mainForms" id="edit" style="display: none;" name="edit item" onsubmit="updateItem(this); return false;">
                     <div>
                         <label for="nameInput2">Name:</label>
                         <input id="nameInput2" type="text" placeholder="Food name...">
@@ -81,9 +73,6 @@
             <section>
                 <h3>Preview:</h3>
                 <div id="preview">
-                    <div>
-                        <img>
-                    </div>
                     <div id="previewItems">
                         <h4></h4>
                         <p></p>

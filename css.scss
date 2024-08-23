@@ -25,6 +25,13 @@ input {
     margin-top: 0.2em;
     width: 15em;
 }
+#error {
+    p {
+        margin: 1em;
+        padding: 0.2em;
+        border: 1px red solid;
+    }
+}
 #login {
     #login-div {
         border: 2px solid orange;
@@ -54,13 +61,6 @@ input {
                     max-width: 6em;
                 }
             }
-            #error {
-                p {
-                    margin: 1em;
-                    padding: 0.2em;
-                    border: 1px red solid;
-                }
-            }
         }
     }
 }
@@ -71,14 +71,18 @@ input {
     }
     section {
         padding: 1em;
+        padding-bottom: 2em;
         min-width: clamp(27%, 30em, 80%);
-        min-height: 30em;
+        height: 30em;
         margin: auto;
         margin-top: 1em;
         border: 3px solid orange;
         border-radius: 15px;
         box-shadow: 2px 5px 5px gray;
-        
+        p{
+            max-width: 35em;
+            margin-top: 0.4em;
+        }
     }
 }
 footer {
@@ -119,5 +123,15 @@ footer {
     }
     .bigText {
         min-height: 7em;
+    }
+}
+#menuItems {
+    max-height: 100%;
+    overflow: scroll;
+    div div{
+        border: solid 3px orange;
+        margin-bottom: 0.5em;
+        border-radius: 15px;
+        padding: 0.3em;
     }
 }

@@ -18,6 +18,9 @@ window.onload = async function() {
     else if(!authed && !document.getElementById("login")) {
         location.href = "login.html"
     }
+    if (authed) {
+        await populate();
+    }
 }
 
 //log in handler
@@ -88,3 +91,68 @@ async function checkLogin() {
         }
     }
 }
+
+async function populate() {
+    let res = await fetch(url + "/menuItems", {
+        method: 'GET',
+        body: null,
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => response.json())
+    console.log(res[0].allergies);
+    let itemList = document.getElementById("menuItems");
+    for (let index = 0; index < res.length; index++) {
+        let container = document.createElement("div");
+        let subcontainer1 = document.createElement("div");
+        let subcontainer2 = document.createElement("div");
+        let name = document.createElement("h4");
+        let price = document.createElement("p");
+        let description = document.createElement("p");
+        let allergies = document.createElement("p")
+        let image = document.createElement("img");
+        let btn = document.createElement("button");
+        btn.innerHTML = "Show Full";
+        btn.addEventListener("click", function(){display(this)});
+        if (res[index].image != "no image")  {
+            image.innerHTML = res[index].image;
+        }
+        else {
+            let image = document.createElement("p");
+            image.innerHTML = res[index].image;
+        }
+        name.innerHTML = res[index].name;
+        description.innerHTML = res[index].description;
+        price.innerHTML = res[index].price;
+        if (res[index].allergies != "no allergies") {
+            for (let index = 0; index < res[index].allergies.length; index++) {
+                allergies.innerHTML += res[index].allergies;
+            }
+        }
+        else {
+            allergies.innerHTML = res[0].allergies
+        }
+
+        subcontainer1.append(image);
+        subcontainer2.append(name);
+        subcontainer2.append(description);
+        subcontainer2.append(allergies);
+        subcontainer2.append(price);
+        subcontainer2.append(btn);
+        container.append(subcontainer1);
+        container.append(subcontainer2);
+        itemList?.append(container);
+    }
+}
+
+function display(obj: HTMLElement): any {
+    let element = obj.parentElement?.parentElement;
+    let copy = element?.cloneNode(true);
+    let preview = document.getElementById("preview");
+    while(preview?.children[0]) {
+        preview?.removeChild(preview.lastChild as HTMLElement);
+    }
+    preview?.append(copy!);
+    return;
+}
+

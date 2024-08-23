@@ -9,6 +9,10 @@ header {
     border-radius: 8px;
     box-shadow: 2px 5px 5px gray;
 }
+body {
+    min-height: 100vh;
+    position: relative;
+}
 h1 {
     margin: 0.4em;
     margin-bottom: 0.2em;
@@ -61,11 +65,13 @@ input {
     }
 }
 #wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    @media screen and (max-width: 1500px) {
+        flex-direction: column;
+    }
     section {
         padding: 1em;
-        min-width: 80%;
+        min-width: clamp(27%, 30em, 80%);
         min-height: 30em;
         margin: auto;
         margin-top: 1em;
@@ -77,13 +83,41 @@ input {
 }
 footer {
     padding: 1em;
-    margin-top: 2em;
     margin-bottom: 1em;
     border: 4px solid orange;
     border-radius: 15px;
     text-align: center;
     box-shadow: 2px 5px 5px gray;
+    position: absolute;
+    height: 50px;
+    bottom: 0px;
+    @media screen and (max-width: 1500px) {
+        bottom: -120px;
+    }
+    width: 90%;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
     p {
         font-size: 1.5em;
+    }
+}
+#modeCheck {
+    width: 1em;
+}
+.mainForms > div {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    display: flex;
+    flex-direction: column;
+}
+.mainForms {
+    button {
+        width: clamp(40%, 4em, 60%);
+        font-size: 1em;
+    }
+    .bigText {
+        min-height: 7em;
     }
 }

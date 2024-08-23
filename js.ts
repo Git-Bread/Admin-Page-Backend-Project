@@ -100,7 +100,7 @@ async function populate() {
             'Content-Type': 'application/json',
         }
     }).then(response => response.json())
-    console.log(res[0].allergies);
+    console.log(res);
     let itemList = document.getElementById("menuItems");
     for (let index = 0; index < res.length; index++) {
         let container = document.createElement("div");
@@ -112,8 +112,17 @@ async function populate() {
         let allergies = document.createElement("p")
         let image = document.createElement("img");
         let btn = document.createElement("button");
+        let btn2 = document.createElement("button");
+        let btn3 = document.createElement("button");
+        let id = document.createElement("span");
+        id.style.display = "none";
+        id.innerHTML = res[index]._id;
         btn.innerHTML = "Show Full";
+        btn2.innerHTML = "Edit";
+        btn3.innerHTML = "Delete";
         btn.addEventListener("click", function(){display(this)});
+        btn2.addEventListener("click", function(){editItem(this)});
+        btn3.addEventListener("click", function(){deleteItem(this)});
         if (res[index].image != "no image")  {
             image.innerHTML = res[index].image;
         }
@@ -130,7 +139,7 @@ async function populate() {
             }
         }
         else {
-            allergies.innerHTML = res[0].allergies
+            allergies.innerHTML = res[0].allergies;
         }
 
         subcontainer1.append(image);
@@ -139,6 +148,9 @@ async function populate() {
         subcontainer2.append(allergies);
         subcontainer2.append(price);
         subcontainer2.append(btn);
+        subcontainer2.append(btn2);
+        subcontainer2.append(btn3);
+        subcontainer2.append(id);
         container.append(subcontainer1);
         container.append(subcontainer2);
         itemList?.append(container);
@@ -156,3 +168,40 @@ function display(obj: HTMLElement): any {
     return;
 }
 
+function newItem(obj: HTMLFormElement) {
+    console.log(obj);
+}
+function editItem(obj: HTMLButtonElement) {
+    let element = obj.parentElement;
+    let edit = document.getElementById("edit");
+    let preview = document.getElementById("previewItems");
+    console.log(preview?.children[0]);
+    
+    console.log(edit![0]);
+    console.log(element);
+    edit![1].value = element![0];
+    edit![2].value = element![3];
+    edit![3].value = element![1];
+    edit![4].value = element![3];
+    preview!.children[0].innerHTML = element![0];
+    preview!.children[1].innerHTML = element![3];
+    preview!.children[2].innerHTML = element![1];
+    preview!.children[3].innerHTML = element![3];
+}
+
+async function deleteItem(obj: HTMLButtonElement) {
+    let element = obj.parentElement;
+    
+    let res = await fetch(url + "/managment/removeMenuItem", {
+        method: 'DELETE',
+        body: JSON.stringify({"id": element?.children[7].innerHTML}),
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => response.json())
+    console.log(res);
+    location.reload();
+}
+
+async function removeCall() {
+}

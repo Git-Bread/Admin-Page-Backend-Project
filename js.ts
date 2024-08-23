@@ -50,11 +50,9 @@ async function log() {
 function errLog(objArr: any) {
     let container = document.getElementById("error");
     clearErr();
-    for (let index = 0; index < objArr.error.length; index++) {
-        let element = document.createElement("p");
-        element.innerHTML = objArr.error[index];
-        container?.append(element);     
-    }
+    let element = document.createElement("p");
+    element.innerHTML = objArr.error;
+    container?.append(element);     
 }
 
 //clears errors

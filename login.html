@@ -10,24 +10,35 @@
     </head>
     <body id="login">
         <div>
-            <h1>Resturang A Administration</h1>
-            <div>
+            <header>
+                <h1>Resturang A-Administrations Webbplats</h1>
+            </header>
+            <div id="login-div">
                 <h2>Log in</h2>
-                <div id="error"></div>
-                <form>
+                <div id="login-content">
                     <div>
-                        <label for="username">Username:</label>
-                        <input id="username" type="text">
+                        <form>
+                            <div>
+                                <label for="username">Username:</label>
+                                <input id="username" type="text" placeholder="username...">
+                            </div>
+                            <div>
+                                <label for="password">Password:</label>
+                                <input id="password" type="text" placeholder="password...">
+                            </div>
+                            <div id="buttonDiv">
+                                <button type="button" id="logBtn">Log In</button>
+                                <p>If the login isent working contact your manager</p>
+                            </div>
+                        </form>
                     </div>
-                    <div>
-                        <label for="password">Password:</label>
-                        <input id="password" type="text">
-                    </div>
-                    <button type="button" id="logBtn">Logga In</button>
-                </form>
-                <p>If the login isent working contact your manager</p>
+                    <div id="error"></div>
+                </div>
             </div>
-        </div>        
+        </div>
+        <footer>
+            <p>contact support on this number: ###-####-####</p>
+        </footer>        
         <script src="js.ts" async defer></script>
     </body>
 </html>

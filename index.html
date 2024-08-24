@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,6 +19,7 @@
                 <h3>Create/Edit Menu Item:</h3>
                 <label for="modeCheck">Edit Mode:</label>
                 <input id="modeCheck" type="checkbox" onchange="{ 
+                    //inline function to retain cohesion since its integral to the html function, can be moved relatively easely but i think it fits here.
                     let create = document.getElementById('create')
                     let edit = document.getElementById('edit')
                     if (create.style.display == 'none') {
@@ -65,7 +66,7 @@
                     </div>
                     <div>
                         <label for="descriptionInput2">Description:</label>
-                        <textarea class="bigText" id="descriptionInput2" type="text" placeholder="Description..."></textarea>
+                        <textarea class="bigText" id="descriptionInput2" placeholder="Description..."></textarea>
                     </div>
                     <button type="submit" id="submitBtn">Edit Selected Item</button>
                 </form>
@@ -74,7 +75,7 @@
                 <h3>Preview:</h3>
                 <div id="preview">
                     <div id="previewItems">
-                        <h4></h4>
+                        <h4>&#8203;</h4>
                         <p></p>
                         <p></p>
                         <p></p>

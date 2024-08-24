@@ -1,24 +1,36 @@
 //local url
 let url = "http://127.0.0.1:3000";
+
+//authentication check
 let authed = false;
+
+//holds last id for editing purpose, since it dosent move the id to a new element
 let lastId= "";
 
 
-//making sure its all loaded before running
+//making sure its all loaded before running, startup script
 window.onload = async function() {
     await checkLogin();
+
+    //if login page
     if (document.getElementById("login")) {
         let logBtn = document.getElementById("logBtn");
         if (logBtn != null) {
             logBtn?.addEventListener("click", () => log());   
         }   
     }
+
+    //if logged in default to admin page
     if (authed && !document.getElementById("index")) {
         location.href = "index.html"
     }
+
+    //if not shove to login
     else if(!authed && !document.getElementById("login")) {
         location.href = "login.html"
     }
+
+    //only populate if authed
     if (authed) {
         await populate();
     }
@@ -30,7 +42,7 @@ async function log() {
         "username": (<HTMLInputElement>document.getElementById("username")).value,
         "password": (<HTMLInputElement>document.getElementById("password")).value
     }
-    //sends object with info
+    //sends login object with info
     let res = await fetch(url + "/managment/adminLoginPage", {
         method: 'POST',
         body: JSON.stringify(obj),
@@ -38,14 +50,17 @@ async function log() {
             'Content-Type': 'application/json'
         }
     }).then(response => response.json())
+
     //error handling
     if (res.error) {
         errLog(res);
         return;
     }
+
+    //localstorage for persistent login
     else {
         localStorage.setItem("token", res.token);
-         location.href = "index.html"
+        location.href = "index.html"
     }
 }
 
@@ -71,6 +86,8 @@ function clearErr() {
 async function checkLogin() {
     let val = localStorage.getItem("token");
     if (val != "") {
+
+        //sends auth token in header
         let res = await fetch(url + "/management/adminCheck", {
             method: 'POST',
             body: null,
@@ -80,11 +97,13 @@ async function checkLogin() {
             }
         }).then(response => response.json())
         console.log(res);
+
         //if logged in
         if (res) {
             authed = true;
             return;
         }
+
         //otherwise remove "old" token
         else {
             console.log("ran");
@@ -93,7 +112,9 @@ async function checkLogin() {
     }
 }
 
+//generate all objects
 async function populate() {
+    //get
     let res = await fetch(url + "/menuItems", {
         method: 'GET',
         body: null,
@@ -101,11 +122,12 @@ async function populate() {
             'Content-Type': 'application/json',
         }
     }).then(response => response.json())
-    console.log(res);
+
+    //create all objects
     let itemList = document.getElementById("menuItems");
     for (let index = 0; index < res.length; index++) {
+
         let container = document.createElement("div");
-        let subcontainer1 = document.createElement("div");
         let subcontainer2 = document.createElement("div");
         let name = document.createElement("h4");
         let price = document.createElement("p");
@@ -115,11 +137,14 @@ async function populate() {
         let btn2 = document.createElement("button");
         let btn3 = document.createElement("button");
         let id = document.createElement("span");
+
         id.style.display = "none";
         id.innerHTML = res[index]._id;
         btn.innerHTML = "Show Full";
         btn2.innerHTML = "Edit";
         btn3.innerHTML = "Delete";
+
+        //event listeners for functionality
         btn.addEventListener("click", function(){display(this)});
         btn2.addEventListener("click", function(){editItem(this)});
         btn3.addEventListener("click", function(){deleteItem(this)});
@@ -128,6 +153,7 @@ async function populate() {
         description.innerHTML = res[index].description;
         price.innerHTML = "Price: " + res[index].price + " (EUR)";
 
+        //allows no input to be valid input
         if (res[index].allergies != "no allergies") {
             allergies.innerHTML = "Allergies: ";
             for (let yndex = 0; yndex < res[index].allergies.length; yndex++) {
@@ -138,6 +164,7 @@ async function populate() {
             allergies.innerHTML = "Allergies: " + res[0].allergies;
         }
 
+        //the append of all appends
         subcontainer2.append(name);
         subcontainer2.append(description);
         subcontainer2.append(allergies);
@@ -151,6 +178,7 @@ async function populate() {
     }
 }
 
+//preview functtionality
 function display(obj: HTMLElement): any {
     let element = obj.parentElement?.parentElement;
     let copy = element?.cloneNode(true);
@@ -162,12 +190,14 @@ function display(obj: HTMLElement): any {
     return;
 }
 
+//push new item to database
 async function newItem(form: HTMLFormElement) {
     let allergies: String;
     allergies = "no allergies";
     if (form?.getElementsByTagName("input")[2].value != "") {
         allergies = form?.getElementsByTagName("input")[2].value;
     }
+
     let newItem = ({
         name: form?.getElementsByTagName("input")[0].value,
         description: form?.getElementsByTagName("textarea")[0].value,
@@ -190,7 +220,7 @@ async function newItem(form: HTMLFormElement) {
     location.reload();
 }
 
-
+//edit item in the editor
 function editItem(obj: HTMLButtonElement) {
 
     let element = obj.parentElement;
@@ -198,6 +228,7 @@ function editItem(obj: HTMLButtonElement) {
     let preview = document.getElementById("previewItems");
     console.log(preview?.children[0]);
 
+    //gets all the stuff from a menu item and pastes to edit and preview 
     edit![0].value = element!.children[0].innerHTML;
     edit![1].value = element!.children[3].innerHTML.replace(/[^0-9]/g, '');
     edit![2].value = element!.children[2].innerHTML.slice(11);
@@ -207,6 +238,7 @@ function editItem(obj: HTMLButtonElement) {
     preview!.children[2].innerHTML = element!.children[3].innerHTML;
     preview!.children[3].innerHTML = element!.children[1].innerHTML;
 
+    //gets id to send to database
     lastId = element!.getElementsByTagName("span")[0].innerHTML;
 
     let create = document.getElementById('create')
@@ -216,6 +248,7 @@ function editItem(obj: HTMLButtonElement) {
     create!.style.display = 'none'
     edit!.style.display = 'block'
 
+    //event listeners for live update to preview
     edit![0].addEventListener("change", () => {
         preview!.children[0].innerHTML = edit![0].value;
     });
@@ -230,6 +263,7 @@ function editItem(obj: HTMLButtonElement) {
     });
 }
 
+//sends object id to delete it
 async function deleteItem(obj: HTMLButtonElement) {
     let element = obj.parentElement;
     
@@ -250,6 +284,7 @@ async function deleteItem(obj: HTMLButtonElement) {
     location.reload();
 }
 
+//sends id and new values to update item
 async function updateItem(form: HTMLFormElement) {
     let allergies: String;
     allergies = "no allergies";

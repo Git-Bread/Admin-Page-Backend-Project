@@ -1,3 +1,4 @@
+
 //local url
 let url = "http://127.0.0.1:3000";
 
@@ -178,15 +179,21 @@ async function populate() {
     }
 }
 
-//preview functtionality
+//preview functionality
 function display(obj: HTMLElement): any {
-    let element = obj.parentElement?.parentElement;
-    let copy = element?.cloneNode(true);
-    let preview = document.getElementById("preview");
-    while(preview?.children[0]) {
-        preview?.removeChild(preview.lastChild as HTMLElement);
-    }
-    preview?.append(copy!);
+    let element = obj.parentElement;
+    let preview = document.getElementById("previewItems");
+    preview!.children[0].innerHTML = element!.children[0].innerHTML;
+    preview!.children[1].innerHTML = element!.children[2].innerHTML;
+    preview!.children[2].innerHTML = element!.children[3].innerHTML;
+    preview!.children[3].innerHTML = element!.children[1].innerHTML;
+
+    let create = document.getElementById('create');
+    let check = document.getElementById("modeCheck") as HTMLInputElement;
+    let edit = document.getElementById("edit");
+    check.checked = false;
+    create!.style.display = 'block'
+    edit!.style.display = 'none'
     return;
 }
 
